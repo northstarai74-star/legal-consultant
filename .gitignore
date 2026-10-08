@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+backup.db
+backup.sql
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build
+dist/
+.dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Deployment
+.vercel
+.netlify
+
+# Temporary
+temp/
+tmp/
+.cache/
