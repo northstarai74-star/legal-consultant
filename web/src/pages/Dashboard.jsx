@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, FilePlus2, FileText, FolderOpen, PenLine, CheckCircle2, Type, Sparkles, Plug } from 'lucide-react';
+import { ArrowRight, FilePlus2, FileText, FolderOpen, PenLine, CheckCircle2, Type, Sparkles, Plug, Database, Mail, Phone, Check, Loader2 } from 'lucide-react';
 import TemplateCard from '../components/TemplateCard.jsx';
 import { StatusPill, EmptyState, Disclaimer } from '../components/ui.jsx';
 import { TemplateIcon } from '../components/icons.jsx';
@@ -23,17 +23,38 @@ function greeting(name) {
   return name ? `${part}, ${name.split(' ')[0]}` : part;
 }
 
+const automationBlueprint = [
+  { key: 'airtable', label: 'Airtable trigger', icon: Database, detail: 'New lead detected in SAKSHI base', status: 'idle' },
+  { key: 'router', label: 'Routing logic', icon: Check, detail: 'Customer matched to voice + email path', status: 'idle' },
+  { key: 'vapi', label: 'Vapi call', icon: Phone, detail: 'Outbound call to +91 98765 43210', status: 'idle' },
+  { key: 'gmail', label: 'Gmail follow-up', icon: Mail, detail: 'Legal email sent to john@clinic.com', status: 'idle' },
+];
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const { docs } = useDocs();
   const { live, profile, config, currentModel } = useSettings();
   const [brief, setBrief] = useState('');
+  const [automationSteps, setAutomationSteps] = useState(automationBlueprint);
+  const [automationRunning, setAutomationRunning] = useState(false);
 
   const start = (e) => {
     e?.preventDefault();
     const text = brief.trim();
     if (!text) return navigate('/new');
     navigate(`/new/${matchTemplate(text).id}`, { state: { brief: text } });
+  };
+
+  const runAutomation = async () => {
+    setAutomationRunning(true);
+    setAutomationSteps(automationBlueprint.map((step) => ({ ...step, status: 'pending' })));
+
+    for (const [index, step] of automationBlueprint.entries()) {
+      await new Promise((resolve) => setTimeout(resolve, 550));
+      setAutomationSteps((current) => current.map((item, i) => (i === index ? { ...item, status: 'done' } : item)));
+    }
+
+    setAutomationRunning(false);
   };
 
   const drafts = docs.filter((d) => d.status !== 'final').length;
@@ -122,6 +143,42 @@ export default function Dashboard() {
           {popular.map((t) => (
             <TemplateCard key={t.id} template={t} />
           ))}
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="section__head">
+          <h2>Automation center</h2>
+          <button className="btn btn--primary btn--sm" type="button" onClick={runAutomation} disabled={automationRunning}>
+            {automationRunning ? <><Loader2 size={14} className="spin" aria-hidden /> Running</> : 'Run workflow'}
+          </button>
+        </div>
+
+        <div className="automation-widget card">
+          <div className="automation-widget__summary">
+            <div>
+              <p className="eyebrow eyebrow--compact">Internal workflow</p>
+              <h3>Integration Airtable, Vapi, Gmail</h3>
+            </div>
+            <span className="pill pill--live">Live</span>
+          </div>
+
+          <div className="automation-widget__steps">
+            {automationSteps.map(({ key, label, detail, icon: Icon, status }) => (
+              <div key={key} className={`automation-step-item automation-step-item--${status}`}>
+                <span className="automation-step-item__icon">
+                  <Icon size={16} aria-hidden />
+                </span>
+                <div>
+                  <strong>{label}</strong>
+                  <small>{detail}</small>
+                </div>
+                <span className="automation-step-item__state">
+                  {status === 'done' ? 'Done' : status === 'pending' ? 'Pending' : 'Ready'}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

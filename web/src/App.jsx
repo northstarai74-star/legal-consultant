@@ -12,6 +12,7 @@ import NewDocument from './pages/NewDocument.jsx';
 import Editor from './pages/Editor.jsx';
 import Library from './pages/Library.jsx';
 import SettingsPage from './pages/Settings.jsx';
+import SupportPage from './pages/Support.jsx';
 
 function NotFound() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
               <Route path="documents" element={<Library />} />
               <Route path="doc/:id" element={<Editor />} />
               <Route path="settings" element={<SettingsPage />} />
+              <Route path="support" element={<SupportPage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

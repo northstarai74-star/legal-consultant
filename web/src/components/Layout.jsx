@@ -4,7 +4,7 @@ import { LayoutDashboard, FilePlus2, FolderOpen, Settings, Menu, X, Sparkles, Pl
 import Logo from './Logo.jsx';
 import { useDocs } from '../context/DocsContext.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
-import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from '../lib/support.js';
+import { SUPPORT_PHONE_DISPLAY } from '../lib/support.js';
 
 const NAV = [
   { to: '/app', label: 'Home', icon: LayoutDashboard, end: true },
@@ -49,13 +49,13 @@ function AIStatus() {
 
 function SupportLink() {
   return (
-    <a href={SUPPORT_PHONE_HREF} className="support-link" title={`Customer support: ${SUPPORT_PHONE_DISPLAY}`}>
+    <Link to="/support" className="support-link" title={`Customer support: ${SUPPORT_PHONE_DISPLAY}`}>
       <Phone size={16} aria-hidden />
       <div>
         <strong>Customer support</strong>
         <small>{SUPPORT_PHONE_DISPLAY}</small>
       </div>
-    </a>
+    </Link>
   );
 }
 
